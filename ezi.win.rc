@@ -1,0 +1,26 @@
+﻿1004 RCDATA "./temp/ezi.assets.binary"
+
+1 ICON "./temp/logo.ico"
+
+1 VERSIONINFO
+FILEVERSION 0,0,0,0
+PRODUCTVERSION 0,0,0,0
+FILEOS 0x4
+FILETYPE 0x1
+{
+BLOCK "StringFileInfo"
+{
+	BLOCK "080404b0"
+	{
+		VALUE "FileDescription", "简单好用的 Webview 应用框架"
+		VALUE "FileVersion", "0.0.0"
+		VALUE "ProductName", "Ezi"
+		VALUE "ProductVersion", "0.0.0"
+	}
+}
+
+BLOCK "VarFileInfo"
+{
+	VALUE "Translation", 0x0804 0x04B0  
+}
+}

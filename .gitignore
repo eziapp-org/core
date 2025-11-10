@@ -1,0 +1,7 @@
+node_modules
+build
+temp
+dist
+gen
+.DS_Store
+.vscode

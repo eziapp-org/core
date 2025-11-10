@@ -1,0 +1,39 @@
+# 基础风格
+BasedOnStyle: WebKit
+
+# 缩进与空格
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+SpaceBeforeParens: Never
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceAfterCStyleCast: true
+
+# 换行与结构
+ColumnLimit: 120
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortBlocksOnASingleLine: true
+
+# 指针与引用位置
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# 对齐与注释
+AlignTrailingComments: true
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+ReflowComments: true
+
+# 函数参数与调用
+BinPackParameters: false
+BinPackArguments: false
+
+# 命名空间与包含
+NamespaceIndentation: All
+IncludeBlocks: Preserve
+SortIncludes: false
+
+# 预处理指令
+IndentPPDirectives: BeforeHash
