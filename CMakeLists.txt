@@ -32,6 +32,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         "/MANIFEST:EMBED"
         "/MANIFESTINPUT:${CMAKE_SOURCE_DIR}/ezi.win.manifest"
     )
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME "$<IF:$<CONFIG:Debug>,eziapp-dev,eziapp-release>"
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/dist"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/dist"
+    )
 else()
     add_executable(${PROJECT_NAME} ${CPP_SOURCES})
     target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
