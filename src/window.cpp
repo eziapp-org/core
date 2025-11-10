@@ -326,7 +326,7 @@ namespace ezi
         splash.width     = at<float>(options, "splashscreen.size.width", 150);
         splash.height    = at<float>(options, "splashscreen.size.height", 150);
         String splashSrc = at<String>(options, "splashscreen.src", defaultSplashSrc);
-        splash.image     = Resource::GetInstance().GetImage("ezi.splashscreen-" + splashSrc);
+        splash.image     = Resource::GetInstance().GetImage(splashSrc);
         splash.aplha     = 1.0f;
 
         // 创建窗口

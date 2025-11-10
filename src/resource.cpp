@@ -62,10 +62,15 @@ namespace ezi
             assetsMetas[key] = { value["offset"].get<size_t>(), value["size"].get<size_t>() };
         }
 #if BUILDTYPE(DEBUG)
+        auto cwd = Utils::GetArg("--cwd");
+        if(!cwd.empty())
+        {
+            SetCurrentDirectoryW(utf8ToUtf16(cwd).c_str());
+        }
         auto configPath = Utils::GetArg("--configpath");
         if(configPath.empty())
         {
-            configPath = "gen/ezi.config.json";
+            configPath = "temp/ezi.config.json";
         }
         std::ifstream file(configPath);
         if(file.is_open())
@@ -126,7 +131,10 @@ namespace ezi
 
     Gdiplus::Image* Resource::GetImage(const String& uri)
     {
-        auto data = GetAssetData(uri);
+#if BUILDTYPE(DEBUG)
+        return Gdiplus::Image::FromFile(utf8ToUtf16(uri).c_str());
+#else
+        auto data = GetAssetData("ezi.splashscreen-" + uri);
         if(data.size() == 0)
             return nullptr;
         IStream* pStream = SHCreateMemStream(data.data(), static_cast<UINT>(data.size()));
@@ -138,5 +146,6 @@ namespace ezi
         pStream->Release();
 
         return image;
+#endif
     }
 }
