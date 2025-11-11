@@ -132,9 +132,10 @@ namespace ezi
     Gdiplus::Image* Resource::GetImage(const String& uri)
     {
 #if BUILDTYPE(DEBUG)
-        return Gdiplus::Image::FromFile(utf8ToUtf16(uri).c_str());
+        return Gdiplus::Image::FromFile(utf8ToUtf16("public/" + uri).c_str());
 #else
-        auto data = GetAssetData("ezi.splashscreen-" + uri);
+        static auto origin = ("https://" + CFGRES<String>("application.package", "com.ezi.app") + "/");
+        auto        data   = GetAssetData(origin + uri);
         if(data.size() == 0)
             return nullptr;
         IStream* pStream = SHCreateMemStream(data.data(), static_cast<UINT>(data.size()));
