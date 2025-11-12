@@ -10,6 +10,7 @@
 #include "resource.hpp"
 #include "ezienv.hpp"
 #include "tray.hpp"
+#include "dialog.hpp"
 
 namespace ezi
 {
@@ -25,6 +26,19 @@ namespace ezi
         Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
         // 初始化EziEnv
         EziEnv::GetInstance();
+
+        // 检查是否单例模式
+        if(CFGRES<bool>("application.singleInstance", false))
+        {
+            String mutexName = "EziAppSingleInstanceMutex_" + CFGRES<String>("application.package", "com.ezi.app");
+            HANDLE hMutex    = CreateMutexA(NULL, FALSE, mutexName.c_str());
+            if(GetLastError() == ERROR_ALREADY_EXISTS)
+            {
+                Dialog dialog(nullptr, CFGRES<String>("application.name", "Ezi App"));
+                dialog.Alert("应用已经在运行中！");
+                exit(0);
+            }
+        }
     }
 #endif
 
