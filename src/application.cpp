@@ -17,16 +17,6 @@ namespace ezi
     Application::Application()
 #if OS(WINDOWS)
     {
-        // 初始化COM
-        CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-        // 初始化WebView2环境
-        auto& webview = Webview::GetInstance();
-        webview.CreateEnv();
-        // 初始化GDI+
-        Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-        // 初始化EziEnv
-        EziEnv::GetInstance();
-
         // 检查是否单例模式
         if(CFGRES<bool>("application.singleInstance", false))
         {
@@ -39,6 +29,16 @@ namespace ezi
                 exit(0);
             }
         }
+
+        // 初始化COM
+        CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+        // 初始化WebView2环境
+        auto& webview = Webview::GetInstance();
+        webview.CreateEnv();
+        // 初始化GDI+
+        Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+        // 初始化EziEnv
+        EziEnv::GetInstance();
     }
 #endif
 
