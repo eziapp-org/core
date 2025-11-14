@@ -312,7 +312,17 @@ namespace ezi
                 auto posStr = position.get<String>();
                 if(posStr == "remembered")
                 {
-                    // todo
+                    try
+                    {
+                        auto winPos = EziEnv::GetInstance().GetRememberedWindowPosition();
+
+                        x = winPos.x * scaleFactor;
+                        y = winPos.y * scaleFactor;
+                    }
+                    catch(const std::exception& e)
+                    {
+                        println("Get remembered window position failed");
+                    }
                 }
             }
         }

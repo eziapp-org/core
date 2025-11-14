@@ -2,6 +2,7 @@
 #include <vector>
 #include "platform.hpp"
 #include "json.hpp"
+#include "ezienv.hpp"
 
 #if OS(WINDOWS)
     #include <gdiplus.h>
@@ -27,6 +28,7 @@ namespace ezi
     {
     private:
         WindowList windows;
+        Window*    masterWindow = nullptr;
         ULONG_PTR  gdiplusToken;
 
         Gdiplus::GdiplusStartupInput gdiplusStartupInput;

@@ -5,6 +5,8 @@
 
 namespace ezi
 {
+    struct Position;
+
     class EziEnv
     {
     private:
@@ -17,7 +19,7 @@ namespace ezi
         EziEnv(const EziEnv&)            = delete;
         EziEnv& operator=(const EziEnv&) = delete;
 
-        void        SaveVar(std::string key, std::string value);
+        void        SaveVar(std::string key, Object value);
         std::string GetVar(std::string key);
 
     public:
@@ -25,6 +27,9 @@ namespace ezi
 
     public:
         static EziEnv& GetInstance();
+
+        Position GetRememberedWindowPosition();
+        void     SetRememberedWindowPosition(const Position& pos);
     };
 
 }

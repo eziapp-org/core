@@ -1,6 +1,7 @@
 #include "ezienv.hpp"
 #include "platform.hpp"
 #include "resource.hpp"
+#include "window.hpp"
 #include <fstream>
 
 #if OS(WINDOWS)
@@ -118,7 +119,7 @@ namespace ezi
         return instance;
     }
 
-    void EziEnv::SaveVar(std::string key, std::string value)
+    void EziEnv::SaveVar(std::string key, Object value)
     {
         envData[key] = value;
         std::ofstream        envFile(envFilePath);
@@ -134,5 +135,22 @@ namespace ezi
     bool EziEnv::IsNeedReset() const
     {
         return isNeedReset;
+    }
+    Position EziEnv::GetRememberedWindowPosition()
+    {
+        if(envData.contains("windowPosition"))
+        {
+            auto position = envData["windowPosition"];
+            if(position.contains("x") && position.contains("y"))
+            {
+                return { position["x"].get<int>(), position["y"].get<int>() };
+            }
+        }
+        throw std::runtime_error("Invalid windowPosition data");
+    }
+    void EziEnv::SetRememberedWindowPosition(const Position& pos)
+    {
+        Object position { { "x", pos.x }, { "y", pos.y } };
+        SaveVar("windowPosition", position);
     }
 }

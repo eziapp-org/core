@@ -69,6 +69,10 @@ namespace ezi
     Window& Application::CrtWindowByOption(const Object& options)
     {
         Window* window = new Window(options);
+        if(windows.empty())
+        {
+            masterWindow = window;
+        }
 
         String src = at<String>(options, "src", "index.html");
         if(src.starts_with("http"))
@@ -89,6 +93,30 @@ namespace ezi
 
     void Application::DelWindowById(WinId winId)
     {
+        auto isMaster        = (masterWindow && masterWindow->GetWinId() == winId);
+        auto isRecordPostion = false;
+
+        if(isMaster)
+        {
+            masterWindow = nullptr;
+            auto config  = ezi::Resource::GetInstance().GetConfig();
+            if(config.contains("window") && config["window"].contains("position"))
+            {
+                auto position = config["window"]["position"];
+                if(position.is_string() && position.get<String>() == "remembered")
+                {
+                    isRecordPostion = true;
+                }
+            }
+        }
+
+        if(isRecordPostion)
+        {
+            Window&  win    = GetWindowById(winId);
+            Position winPos = win.GetPosition();
+            EziEnv::GetInstance().SetRememberedWindowPosition(winPos);
+        }
+
         for(auto it = windows.begin(); it != windows.end(); ++it)
         {
             if((*it)->GetWinId() == winId)
