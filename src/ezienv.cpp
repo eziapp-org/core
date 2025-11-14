@@ -152,4 +152,33 @@ namespace ezi
         Object position { { "x", pos.x }, { "y", pos.y } };
         SaveVar("windowPosition", position);
     }
+
+    bool EziEnv::PermissionRequest(std::string permissionName)
+    {
+        static Dialog dialog(nullptr, CFGRES<std::string>("application.name", "EziApp"));
+
+        static std::map<std::string, bool> permissionOnceCache;
+
+        std::string permissionKey = "permission:" + permissionName;
+
+        if(permissionOnceCache.contains(permissionKey))
+        {
+            return permissionOnceCache[permissionKey];
+        }
+
+        auto result = dialog.PermissionRequest(permissionName);
+        if(result == PermissionResult::AlwaysAllow)
+        {
+            permissionOnceCache[permissionKey] = true;
+            return true;
+        }
+        else if(result == PermissionResult::AllowOnce)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

@@ -30,6 +30,7 @@ namespace ezi
 
         Position GetRememberedWindowPosition();
         void     SetRememberedWindowPosition(const Position& pos);
+        bool     PermissionRequest(std::string permissionName);
     };
 
 }

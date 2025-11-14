@@ -332,7 +332,34 @@ namespace ezi
                 Callback<ICoreWebView2PermissionRequestedEventHandler>(
                     [](ICoreWebView2* sender, ICoreWebView2PermissionRequestedEventArgs* args) -> HRESULT
                     {
-                        args->put_State(COREWEBVIEW2_PERMISSION_STATE_ALLOW);
+                        static std::map<COREWEBVIEW2_PERMISSION_KIND, String> permissionMap
+                            = { { COREWEBVIEW2_PERMISSION_KIND_UNKNOWN_PERMISSION, "未知权限" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_MICROPHONE, "使用麦克风" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_CAMERA, "使用摄像头" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_GEOLOCATION, "获取地理位置" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_NOTIFICATIONS, "显示通知" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_OTHER_SENSORS, "访问其他传感器" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_CLIPBOARD_READ, "读取剪贴板" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_MULTIPLE_AUTOMATIC_DOWNLOADS, "多文件自动下载" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_FILE_READ_WRITE, "文件读写访问" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_AUTOPLAY, "自动播放媒体" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_LOCAL_FONTS, "访问本地字体" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_MIDI_SYSTEM_EXCLUSIVE_MESSAGES, "MIDI 系统独占消息" },
+                                  { COREWEBVIEW2_PERMISSION_KIND_WINDOW_MANAGEMENT, "窗口管理权限" } };
+
+                        COREWEBVIEW2_PERMISSION_KIND kind;
+                        args->get_PermissionKind(&kind);
+
+                        String permissionName = permissionMap[kind];
+
+                        if(EziEnv::GetInstance().PermissionRequest(permissionName))
+                        {
+                            args->put_State(COREWEBVIEW2_PERMISSION_STATE_ALLOW);
+                        }
+                        else
+                        {
+                            args->put_State(COREWEBVIEW2_PERMISSION_STATE_DENY);
+                        }
                         return S_OK;
                     })
                     .Get(),
@@ -358,10 +385,8 @@ namespace ezi
                         wil::unique_cotaskmem_string uri;
                         args->get_Uri(&uri);
 
-                        auto dialog = Dialog(window.GetWinId(), window.GetTitle());
-                        // todo
-                        if(dialog.PermissionRequest("使用默认浏览器打开链接 " + utf16ToUtf8(uri.get()))
-                            != PermissionResult::Deny)
+                        auto permissionKey = "使用默认浏览器打开链接 " + utf16ToUtf8(uri.get());
+                        if(EziEnv::GetInstance().PermissionRequest(permissionKey))
                         {
                             ShellExecuteW(nullptr, L"open", uri.get(), nullptr, nullptr, SW_SHOWNORMAL);
                         }

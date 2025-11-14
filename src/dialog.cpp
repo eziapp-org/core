@@ -35,7 +35,7 @@ namespace ezi
 
     PermissionResult Dialog::PermissionRequest(String permissionName)
     {
-        DialogButtons buttons { { (uint8_t) PermissionResult::AlwaysAllow, "总是允许" },
+        DialogButtons buttons { { (uint8_t) PermissionResult::AlwaysAllow, "本次运行允许" },
             { (uint8_t) PermissionResult::AllowOnce, "允许一次" },
             { (uint8_t) PermissionResult::Deny, "拒绝" } };
 
