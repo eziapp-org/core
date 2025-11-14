@@ -110,7 +110,6 @@ namespace ezi
                 newEnvFile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
             }
         }
-        SaveVar("permission:bluethooth", "always");
     }
 
     EziEnv& EziEnv::GetInstance()
