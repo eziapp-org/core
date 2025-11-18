@@ -28,7 +28,7 @@
 ## 🚀 Quick Start
 
 ```bash
-npm create eziapp
+npm create eziapp@latest
 cd eziapp-project
 npm install
 npm run dev
