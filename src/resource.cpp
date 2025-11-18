@@ -13,6 +13,30 @@ namespace ezi
 {
     Resource::Resource()
     {
+#if BUILDTYPE(DEBUG)
+        auto cwd = Utils::GetArg("--cwd");
+        if(!cwd.empty())
+        {
+            SetCurrentDirectoryW(utf8ToUtf16(cwd).c_str());
+        }
+        auto configPath = Utils::GetArg("--configpath");
+        if(configPath.empty())
+        {
+            configPath = "temp/ezi.config.json";
+        }
+        std::ifstream file(configPath);
+        if(file.is_open())
+        {
+            file >> config;
+            file.close();
+        }
+        else
+        {
+            MessageBox(nullptr, (std::string("cannt open ") + configPath).c_str(), "error", MB_OK | MB_ICONERROR);
+            exit(1);
+        }
+#else
+
         HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(1004), RT_RCDATA);
         if(!hRes)
             throw std::runtime_error("Failed to find resource ezi.assets.binary");
@@ -27,7 +51,7 @@ namespace ezi
 
         assetsBinarys = std::span<const uint8_t>(static_cast<const uint8_t*>(pData), size);
 
-#define MANIFESTSIZEFLAG 4
+    #define MANIFESTSIZEFLAG 4
 
         std::span<const uint8_t> manifestSizePos = assetsBinarys.subspan(size - MANIFESTSIZEFLAG, MANIFESTSIZEFLAG);
 
@@ -61,29 +85,7 @@ namespace ezi
         {
             assetsMetas[key] = { value["offset"].get<size_t>(), value["size"].get<size_t>() };
         }
-#if BUILDTYPE(DEBUG)
-        auto cwd = Utils::GetArg("--cwd");
-        if(!cwd.empty())
-        {
-            SetCurrentDirectoryW(utf8ToUtf16(cwd).c_str());
-        }
-        auto configPath = Utils::GetArg("--configpath");
-        if(configPath.empty())
-        {
-            configPath = "temp/ezi.config.json";
-        }
-        std::ifstream file(configPath);
-        if(file.is_open())
-        {
-            file >> config;
-            file.close();
-        }
-        else
-        {
-            MessageBox(nullptr, (std::string("cannt open ") + configPath).c_str(), "error", MB_OK | MB_ICONERROR);
-            exit(1);
-        }
-#else
+
         auto   configData = GetAssetData("ezi.config.manifest");
         String configJsonStr(reinterpret_cast<const char*>(configData.data()), configData.size());
         config = Json::parse(configJsonStr);

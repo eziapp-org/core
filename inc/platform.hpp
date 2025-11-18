@@ -59,6 +59,15 @@
     #undef EZI_BUILDTYPE
     #define EZI_BUILDTYPE RELEASE
 #endif
+
+// 如果是 npm 的 Debug 构建（仅宏定义，不启用 C++ 的调试信息）
+// 覆盖上面的设置，强制构建类型为 DEBUG,启用DEBUG代码块
+// 实际编译时仍然是 Release 优化级别
+#ifdef NPM_DEV
+    #undef EZI_BUILDTYPE
+    #define EZI_BUILDTYPE DEBUG
+#endif
+
 #define BUILDTYPE(type) (EZI_BUILDTYPE == type)
 
 // Windows的字符转换 gbk与unicode utf16 互转
