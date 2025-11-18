@@ -1,15 +1,13 @@
 <p align="center">
   <a href="https://github.com/eziapp-org/core" target="_blank">
-    <img width="180" src="https://eziapp-org.github.io/ezi-logo.svg" alt="EziApp logo">
+    <img width="180" src="https://eziapp.dev/ezi-logo.svg" alt="EziApp logo">
   </a>
 </p>
 
 <br/>
 
 <p align="center">
-  <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/eziapp-org/core" alt="license">
-  </a>
+  <img src="https://img.shields.io/github/license/eziapp-org/core" alt="license">
   <img src="https://img.shields.io/npm/v/@eziapp-org/builder" alt="npm version">
   <img src="https://img.shields.io/badge/EziApp-not--stable-red" alt="unstable">
   <img src="https://img.shields.io/npm/dm/@eziapp-org/builder" alt="npm downloads">
@@ -39,7 +37,7 @@ npm run build
 
 ## 📚 EziApp Components
 
-- [**Docs**](https://eziapp-org.github.io) — Documentation for EziApp
+- [**Docs**](https://github.com/eziapp-org/document) — Documentation for EziApp
 - [**Create**](https://github.com/eziapp-org/create) — Project scaffolding tool
 - [**Builder**](https://github.com/eziapp-org/builder) — Cross‑platform packager
 - [**Bridge**](https://github.com/eziapp-org/bridge) — JavaScript bridge for native APIs
