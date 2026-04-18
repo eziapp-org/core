@@ -5,3 +5,4 @@ dist
 gen
 .DS_Store
 .vscode
+.cache
