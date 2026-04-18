@@ -110,6 +110,7 @@ namespace ezi
         void SetMovable(bool enable);
         void SetFocusable(bool enable);
         void SetBorderless(bool enable);
+        void SetAlwaysOnTop(bool enable);
 
     public:
         void Close();

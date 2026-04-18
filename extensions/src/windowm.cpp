@@ -331,6 +331,14 @@ namespace ezi
             return "success";
         }
 
+        Object setAlwaysOnTop(Object args)
+        {
+            auto& window = Private::GetWindowById(args["winId"]);
+            bool  enable = args["enable"];
+            window.SetAlwaysOnTop(enable);
+            return "success";
+        }
+
         Object setBeforeCloseMessage(Object args)
         {
             auto& window = Private::GetWindowById(args["winId"]);

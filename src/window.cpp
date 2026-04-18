@@ -743,4 +743,15 @@ namespace ezi
     {
         return onCloseCallback;
     }
+
+    void Window::SetAlwaysOnTop(bool enable)
+    {
+        SetWindowPos(this->winId,
+            enable ? HWND_TOPMOST : HWND_NOTOPMOST,
+            0,
+            0,
+            0,
+            0,
+            SWP_NOMOVE | SWP_NOSIZE);
+    }
 }
