@@ -3,6 +3,7 @@
 #include "windowm.hpp"
 #include "terminal.hpp"
 #include "tray.hpp"
+#include "shortcut.hpp"
 
 #if OS(WINDOWS)
     #include <wrl.h>
@@ -22,6 +23,7 @@ namespace ezi
             terminal::Mount();
 #endif
             tray::Mount();
+            shortcut::Mount();
         }
 
         view->add_WebMessageReceived(

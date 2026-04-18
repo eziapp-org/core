@@ -215,6 +215,10 @@ namespace ezi
             }
             break;
         }
+        case WM_HOTKEY:{
+            window->ExecuteScript("window.__ShortCutCallback_" + std::to_string(wParam) + "();");
+            break;
+        }
         }
         return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
