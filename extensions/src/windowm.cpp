@@ -439,6 +439,7 @@ namespace ezi
             REG(windowm, setFocusable);
             REG(windowm, setBorderless);
             REG(windowm, setBeforeCloseMessage);
+            REG(windowm, setAlwaysOnTop);
         }
     }
 }
