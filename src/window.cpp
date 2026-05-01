@@ -605,7 +605,7 @@ namespace ezi
     Size Window::GetSize() const
     {
         RECT rect;
-        GetClientRect(this->winId, &rect);
+        GetWindowRect(this->winId, &rect);
         auto scaleFactor = GetScaleFactor();
         return Size { static_cast<int>((rect.right - rect.left) / scaleFactor),
             static_cast<int>((rect.bottom - rect.top) / scaleFactor) };
