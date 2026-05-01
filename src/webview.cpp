@@ -2,6 +2,7 @@
 #include "webview.hpp"
 #include "print.hpp"
 #include "application.hpp"
+#include <winuser.h>
 
 #if OS(WINDOWS)
     #include <shlobj.h>
@@ -123,6 +124,8 @@ namespace ezi
                         case VK_RIGHT:
                         case VK_UP:
                         case VK_DOWN:
+                        case VK_CONTROL:
+                        case VK_MENU:
                             break;
                         default:
                             args->put_Handled(TRUE);
