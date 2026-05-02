@@ -62,6 +62,7 @@ class Window
     WindowStatus status;
     String accentColor;
     Splash splash;
+    Size minSize{100, 100};
 
     std::function<bool()> onCloseCallback;
 
@@ -88,6 +89,7 @@ class Window
 
     BackgroundMode GetBackgroundMode() const;
     Size GetSize() const;
+    Size GetMinSize() const;
     Position GetPosition() const;
 
     std::function<bool()> &GetOnCloseCallback();
@@ -104,10 +106,12 @@ class Window
     void SetCaptionColor(DWORD color);
     void SetBackgroundMode(BackgroundMode mode);
     void SetSize(Size size);
+    void SetMinSize(Size size);
     void SetPosition(Position position);
     void SetMaximizable(bool enable);
     void SetMinimizable(bool enable);
     void SetMovable(bool enable);
+    void SetResizable(bool enable);
     void SetFocusable(bool enable);
     void SetBorderless(bool enable);
     void SetAlwaysOnTop(bool enable);

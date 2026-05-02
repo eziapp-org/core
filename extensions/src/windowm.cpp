@@ -224,6 +224,16 @@ Object getSize(Object args)
     };
 }
 
+Object getMinSize(Object args)
+{
+    auto &window = Private::GetWindowById(args["winId"]);
+    Size size = window.GetMinSize();
+    return Object{
+        {"width", size.width},
+        {"height", size.height},
+    };
+}
+
 Object getPosition(Object args)
 {
     auto &window = Private::GetWindowById(args["winId"]);
@@ -391,6 +401,24 @@ Object setBeforeCloseMessage(Object args)
 
     return "success";
 }
+
+Object setResizable(Object args)
+{
+    auto &window = Private::GetWindowById(args["winId"]);
+    bool enable = args["enable"];
+    window.SetResizable(enable);
+    return "success";
+}
+
+Object setMinSize(Object args)
+{
+    auto &window = Private::GetWindowById(args["winId"]);
+    Size size;
+    size.width = args["width"];
+    size.height = args["height"];
+    window.SetMinSize(size);
+    return "success";
+}
 } // namespace windowm
 
 namespace windowm
@@ -425,6 +453,7 @@ void Mount()
 
     REG(windowm, getBackgroundMode);
     REG(windowm, getSize);
+    REG(windowm, getMinSize);
     REG(windowm, getPosition);
 
     REG(windowm, setTitle);
@@ -438,6 +467,8 @@ void Mount()
     REG(windowm, setBorderless);
     REG(windowm, setBeforeCloseMessage);
     REG(windowm, setAlwaysOnTop);
+    REG(windowm, setResizable);
+    REG(windowm, setMinSize);
 }
 } // namespace windowm
 } // namespace ezi

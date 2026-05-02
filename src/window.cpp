@@ -183,6 +183,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         window->ExecuteScript("window.__ShortCutCallback_" + std::to_string(wParam) + "();");
         break;
     }
+
+    case WM_GETMINMAXINFO: {
+        if (window == nullptr)
+            break;
+        MINMAXINFO *mmi = reinterpret_cast<MINMAXINFO *>(lParam);
+        auto minSize = window->GetMinSize();
+        auto scaleFactor = window->GetScaleFactor();
+        mmi->ptMinTrackSize.x = minSize.width * scaleFactor;
+        mmi->ptMinTrackSize.y = minSize.height * scaleFactor;
+        return 0;
+    }
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -316,6 +327,55 @@ Window::Window(const Object &options)
 
     // 关联窗口实例
     SetWindowLongPtr(this->winId, GWLP_USERDATA, (LONG_PTR)this);
+
+    // 无边框
+    if (at<bool>(options, "borderless", false))
+    {
+        SetBorderless(true);
+    }
+
+    // maximizable
+    if (at<bool>(options, "maximizable", true) == false)
+    {
+        SetMaximizable(false);
+    }
+
+    // minimizable
+    if (at<bool>(options, "minimizable", true) == false)
+    {
+        SetMinimizable(false);
+    }
+
+    // movable
+    if (at<bool>(options, "movable", true) == false)
+    {
+        SetMovable(false);
+    }
+
+    // resizable
+    if (at<bool>(options, "resizable", true) == false)
+    {
+        SetResizable(false);
+    }
+
+    // minSize
+    if (options.contains("minSize"))
+    {
+        auto minSize = options["minSize"];
+        if (minSize.is_object())
+        {
+            Size size;
+            size.width = at<int>(minSize, "width", 0) * scaleFactor;
+            size.height = at<int>(minSize, "height", 0) * scaleFactor;
+            SetMinSize(size);
+        }
+    }
+
+    // alwaysOnTop
+    if (at<bool>(options, "alwaysOnTop", false))
+    {
+        SetAlwaysOnTop(true);
+    }
 
     // 设置背景模式
     SetBackgroundMode(bgMode);
@@ -695,5 +755,29 @@ std::function<bool()> &Window::GetOnCloseCallback()
 void Window::SetAlwaysOnTop(bool enable)
 {
     SetWindowPos(this->winId, enable ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+}
+
+void Window::SetMinSize(Size size)
+{
+    minSize = size;
+}
+
+void Window::SetResizable(bool enable)
+{
+    LONG style = GetWindowLong(this->winId, GWL_STYLE);
+    if (enable)
+    {
+        style |= WS_THICKFRAME;
+    }
+    else
+    {
+        style &= ~WS_THICKFRAME;
+    }
+    SetWindowLong(this->winId, GWL_STYLE, style);
+}
+
+Size Window::GetMinSize() const
+{
+    return minSize;
 }
 } // namespace ezi
