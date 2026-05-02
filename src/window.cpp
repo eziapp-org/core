@@ -194,6 +194,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         mmi->ptMinTrackSize.y = minSize.height * scaleFactor;
         return 0;
     }
+    case WM_SYSCOMMAND:
+        if (window == nullptr)
+            break;
+        if (!window->IsMovable() && (wParam & 0xFFF0) == SC_MOVE)
+            return 0; // 禁止移动
+        break;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -593,7 +599,7 @@ bool Window::IsMinimized()
 
 bool Window::IsMovable()
 {
-    return (GetWindowLong(this->winId, GWL_STYLE) & WS_CAPTION) != 0;
+    return movable;
 }
 
 bool Window::IsFocusable()
@@ -677,16 +683,7 @@ void Window::SetMinimizable(bool enable)
 
 void Window::SetMovable(bool enable)
 {
-    LONG style = GetWindowLong(this->winId, GWL_STYLE);
-    if (enable)
-    {
-        style |= WS_CAPTION;
-    }
-    else
-    {
-        style &= ~WS_CAPTION;
-    }
-    SetWindowLong(this->winId, GWL_STYLE, style);
+    movable = enable;
 }
 
 void Window::SetFocusable(bool enable)

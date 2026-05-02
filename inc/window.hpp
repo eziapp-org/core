@@ -63,6 +63,7 @@ class Window
     String accentColor;
     Splash splash;
     Size minSize{100, 100};
+    bool movable{true};
 
     std::function<bool()> onCloseCallback;
 
