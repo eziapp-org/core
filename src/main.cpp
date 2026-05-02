@@ -1,16 +1,16 @@
 #include "application.hpp"
-#include "window.hpp"
 #include "entry.hpp"
 #include "print.hpp"
 #include "resource.hpp"
+#include "window.hpp"
 
-int entry(int argc, char* argv[])
+int entry(int argc, char *argv[])
 {
-    auto& app = ezi::Application::GetInstance();
+    auto &app = ezi::Application::GetInstance();
 
     auto config = ezi::Resource::GetInstance().GetConfig();
 
-    auto& win = app.CrtWindowByOption(config["window"]);
+    auto &win = app.CrtWindowByOption(config["window"]);
 
     win.Show();
 

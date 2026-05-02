@@ -1,36 +1,36 @@
 #pragma once
 
-#include <string>
 #include "json.hpp"
+#include <string>
 
 namespace ezi
 {
-    struct Position;
+struct Position;
 
-    class EziEnv
-    {
-    private:
-        Json   envData;
-        bool   isNeedReset = false;
-        String envFilePath;
+class EziEnv
+{
+  private:
+    Json envData;
+    bool isNeedReset = false;
+    String envFilePath;
 
-    private:
-        EziEnv();
-        EziEnv(const EziEnv&)            = delete;
-        EziEnv& operator=(const EziEnv&) = delete;
+  private:
+    EziEnv();
+    EziEnv(const EziEnv &) = delete;
+    EziEnv &operator=(const EziEnv &) = delete;
 
-        void        SaveVar(std::string key, Object value);
-        std::string GetVar(std::string key);
+    void SaveVar(std::string key, Object value);
+    std::string GetVar(std::string key);
 
-    public:
-        bool IsNeedReset() const;
+  public:
+    bool IsNeedReset() const;
 
-    public:
-        static EziEnv& GetInstance();
+  public:
+    static EziEnv &GetInstance();
 
-        Position GetRememberedWindowPosition();
-        void     SetRememberedWindowPosition(const Position& pos);
-        bool     PermissionRequest(std::string permissionName);
-    };
+    Position GetRememberedWindowPosition();
+    void SetRememberedWindowPosition(const Position &pos);
+    bool PermissionRequest(std::string permissionName);
+};
 
-}
+} // namespace ezi

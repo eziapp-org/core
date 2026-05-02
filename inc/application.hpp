@@ -1,57 +1,57 @@
 #pragma once
-#include <vector>
-#include "platform.hpp"
-#include "json.hpp"
 #include "ezienv.hpp"
+#include "json.hpp"
+#include "platform.hpp"
+#include <vector>
 
 #if OS(WINDOWS)
-    #include <gdiplus.h>
-    #pragma comment(lib, "Gdiplus.lib")
+#include <gdiplus.h>
+#pragma comment(lib, "Gdiplus.lib")
 #endif
 
 namespace ezi
 {
-    struct SystemVersion
-    {
-        int major;
-        int minor;
-        int build;
-    };
+struct SystemVersion
+{
+    int major;
+    int minor;
+    int build;
+};
 
-    class Webview;
-    class Window;
+class Webview;
+class Window;
 
-    typedef std::vector<Window*> WindowList;
-    typedef HWND                 WinId;
+typedef std::vector<Window *> WindowList;
+typedef HWND WinId;
 
-    class Application
-    {
-    private:
-        WindowList windows;
-        Window*    masterWindow = nullptr;
-        ULONG_PTR  gdiplusToken;
+class Application
+{
+  private:
+    WindowList windows;
+    Window *masterWindow = nullptr;
+    ULONG_PTR gdiplusToken;
 
-        Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 
-    private:
-        Application();
-        Application(const Application&)            = delete;
-        Application& operator=(const Application&) = delete;
-        ~Application();
+  private:
+    Application();
+    Application(const Application &) = delete;
+    Application &operator=(const Application &) = delete;
+    ~Application();
 
-    public:
-        Window&       CrtWindowByOption(const Object& options);
-        void          DelWindowById(WinId winId);
-        Window&       GetWindowById(WinId winId);
-        WindowList&   GetWindowList();
-        SystemVersion GetSystemVersion();
+  public:
+    Window &CrtWindowByOption(const Object &options);
+    void DelWindowById(WinId winId);
+    Window &GetWindowById(WinId winId);
+    WindowList &GetWindowList();
+    SystemVersion GetSystemVersion();
 
-    public:
-        static Application& GetInstance();
+  public:
+    static Application &GetInstance();
 
-        int Run();
-        int Exit(int code);
+    int Run();
+    int Exit(int code);
 
-        void ExitIfNoVisibleWindow();
-    };
+    void ExitIfNoVisibleWindow();
+};
 } // namespace ezi

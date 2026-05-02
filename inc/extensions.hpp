@@ -1,6 +1,6 @@
 #pragma once
-#include "print.hpp"
 #include "json.hpp"
+#include "print.hpp"
 
 #define REG(space, func)                                                                                               \
     ezi::Bridge::GetInstance().Register(#space "." #func, func);                                                       \

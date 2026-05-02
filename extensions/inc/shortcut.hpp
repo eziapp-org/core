@@ -1,8 +1,8 @@
 #pragma once
 namespace ezi
 {
-    namespace shortcut
-    {
-        void Mount();
-    }
+namespace shortcut
+{
+void Mount();
 }
+} // namespace ezi

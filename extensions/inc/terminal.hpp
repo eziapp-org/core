@@ -4,9 +4,9 @@
 namespace ezi
 {
 #if BUILDTYPE(DEBUG)
-    namespace terminal
-    {
-        void Mount();
-    }
-#endif
+namespace terminal
+{
+void Mount();
 }
+#endif
+} // namespace ezi

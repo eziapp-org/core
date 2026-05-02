@@ -1,35 +1,35 @@
 #pragma once
 #include <nlohmann/json.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace ezi
 {
-    typedef nlohmann::json      Json;
-    typedef Json                Object;
-    typedef std::vector<Object> Array;
-    typedef std::string         String;
+typedef nlohmann::json Json;
+typedef Json Object;
+typedef std::vector<Object> Array;
+typedef std::string String;
 
-    template <typename T> T at(const nlohmann::json& j, const std::string& path, T default_value)
+template <typename T> T at(const nlohmann::json &j, const std::string &path, T default_value)
+{
+    std::istringstream ss(path);
+    String key;
+    const Json *current = &j;
+
+    while (std::getline(ss, key, '.'))
     {
-        std::istringstream ss(path);
-        String             key;
-        const Json*        current = &j;
-
-        while(std::getline(ss, key, '.'))
+        if (current->contains(key))
         {
-            if(current->contains(key))
-            {
-                current = &(*current)[key];
-            }
-            else
-            {
-                return default_value;
-            }
+            current = &(*current)[key];
         }
-
-        if(current->is_null())
+        else
+        {
             return default_value;
-        return current->get<T>();
+        }
     }
+
+    if (current->is_null())
+        return default_value;
+    return current->get<T>();
 }
+} // namespace ezi
