@@ -29,7 +29,7 @@ static std::vector<MenuItem> ParseMenuItemsFromJson(const std::vector<Object> &i
     {
         MenuItem menuItem;
         std::string type = item["type"];
-        if (type == "normal")
+        if (type == "text")
             menuItem.type = MenuItem::Type::NORMAL;
         else if (type == "separator")
             menuItem.type = MenuItem::Type::SEPARATOR;
@@ -172,7 +172,7 @@ LRESULT CALLBACK Tray::TrayProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             try
             {
                 auto &win = Private::GetWindowById(std::to_string(reinterpret_cast<uint64_t>(tray.eventReceiver)));
-                win.ExecuteScript("window.__TrayMenuItemClickCallback_(" + std::to_string(eventId) + ");");
+                win.ExecuteScript("window.__TrayMenuItemClickCallbacks_.func_" + std::to_string(eventId) + "();");
             }
             catch (...)
             {
