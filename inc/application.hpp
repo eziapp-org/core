@@ -30,6 +30,7 @@ class Application
     WindowList windows;
     Window *masterWindow = nullptr;
     ULONG_PTR gdiplusToken;
+    String windowClassName;
 
     Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 
@@ -45,6 +46,7 @@ class Application
     Window &GetWindowById(WinId winId);
     WindowList &GetWindowList();
     SystemVersion GetSystemVersion();
+    String GetWindowClassName();
 
   public:
     static Application &GetInstance();

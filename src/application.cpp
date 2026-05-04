@@ -17,15 +17,22 @@ namespace ezi
 Application::Application()
 #if OS(WINDOWS)
 {
+    auto packageName = CFGRES<String>("application.package", "com.ezi.app");
+    this->windowClassName = "EziWindowClass_" + packageName;
+
     // 检查是否单例模式
     if (CFGRES<bool>("application.singleInstance", false))
     {
-        String mutexName = "EziAppSingleInstanceMutex_" + CFGRES<String>("application.package", "com.ezi.app");
+        String mutexName = "EziAppSingleInstanceMutex_" + packageName;
         HANDLE hMutex = CreateMutexA(NULL, FALSE, mutexName.c_str());
         if (GetLastError() == ERROR_ALREADY_EXISTS)
         {
-            Dialog dialog(nullptr, CFGRES<String>("application.name", "Ezi App"));
-            dialog.Alert("应用已经在运行中！");
+            HWND hWnd = FindWindow(this->windowClassName.c_str(), NULL);
+            if(hWnd)
+            {
+                ShowWindow(hWnd, SW_SHOW);
+                SetForegroundWindow(hWnd);
+            }
             exit(0);
         }
     }
@@ -146,6 +153,11 @@ Window &Application::GetWindowById(WinId winId)
         }
     }
     throw std::runtime_error("Window not found");
+}
+
+String Application::GetWindowClassName()
+{
+    return windowClassName;
 }
 
 WindowList &Application::GetWindowList()

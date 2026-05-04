@@ -217,12 +217,14 @@ void Window::Show()
 Window::Window(const Object &options)
 {
     status = WindowStatus::Loading;
-// 注册窗口类
-#define WClassName "EziWindowClass"
+    auto &app = ezi::Application::GetInstance();
+
+    // 注册窗口类
     HINSTANCE hInstance = GetModuleHandle(nullptr);
     WNDCLASSEX wcex = {0};
     wcex.cbSize = sizeof(WNDCLASSEX);
 
+    auto WClassName = app.GetWindowClassName().c_str();
     if (!GetClassInfoEx(hInstance, WClassName, &wcex))
     {
         wcex.lpfnWndProc = WndProc;
