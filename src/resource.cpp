@@ -22,7 +22,7 @@ Resource::Resource()
     auto configPath = Utils::GetArg("--configpath");
     if (configPath.empty())
     {
-        configPath = "temp/ezi.config.json";
+        configPath = "node_modules/.eziapp/ezi.config.json";
     }
     std::ifstream file(configPath);
     if (file.is_open())
