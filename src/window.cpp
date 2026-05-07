@@ -327,6 +327,12 @@ Window::Window(const Object &options)
     this->winId = CreateWindowEx(0, WClassName, utf8ToGbk(title).c_str(), WS_OVERLAPPEDWINDOW, x, y, width, height,
                                  nullptr, nullptr, hInstance, nullptr);
 
+    if (this->winId == NULL)
+    {
+        MessageBox(nullptr, utf8ToGbk("窗口创建失败，应用即将关闭。").c_str(), "Error", MB_OK);
+        exit(1);
+    }
+
     // 创建WebView2控制器
     Webview::GetInstance().CreateController(*this);
 
