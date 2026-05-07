@@ -161,13 +161,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             if (!showClose)
                 return 0;
         }
+        Application::GetInstance().DelWindowById(hwnd);
         break;
     }
 
-    case WM_DESTROY: {
-        Application::GetInstance().DelWindowById(hwnd);
-        return 0;
-    }
     case WM_SIZE: {
         InvalidateRect(hwnd, nullptr, FALSE);
         auto controller = window->GetController();
@@ -524,7 +521,8 @@ String Window::GetTitle() const
 
 void Window::Close()
 {
-    DestroyWindow(this->winId);
+    PostMessage(this->winId, WM_CLOSE, 0, 0);
+    // 窗口示例在WM_CLOSE消息中被删除，这里不需要删除窗口实例
 }
 
 void Window::Reload()

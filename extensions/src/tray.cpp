@@ -144,6 +144,7 @@ LRESULT CALLBACK Tray::TrayProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         switch (eventId)
         {
         case TRAY_MENU_EXIT_ID: {
+            Tray::GetInstance().Hide();
             Application::GetInstance().Exit(0);
             break;
         }

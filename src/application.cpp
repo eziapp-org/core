@@ -28,7 +28,7 @@ Application::Application()
         if (GetLastError() == ERROR_ALREADY_EXISTS)
         {
             HWND hWnd = FindWindow(this->windowClassName.c_str(), NULL);
-            if(hWnd)
+            if (hWnd)
             {
                 ShowWindow(hWnd, SW_SHOW);
                 SetForegroundWindow(hWnd);
@@ -98,32 +98,29 @@ Window &Application::CrtWindowByOption(const Object &options)
     return *window;
 }
 
+// 只能在WM_CLOSE消息中调用
 void Application::DelWindowById(WinId winId)
 {
-    auto isMaster = (masterWindow && masterWindow->GetWinId() == winId);
-    auto isRecordPostion = false;
-
-    if (isMaster)
+    // 判断是否要记录窗口位置
+    if (masterWindow != nullptr && masterWindow->GetWinId() == winId)
     {
+        // 删除的窗口是主窗口
         masterWindow = nullptr;
+
+        // 判断是否需要记录窗口位置
         auto config = ezi::Resource::GetInstance().GetConfig();
         if (config.contains("window") && config["window"].contains("position"))
         {
             auto position = config["window"]["position"];
             if (position.is_string() && position.get<String>() == "remembered")
             {
-                isRecordPostion = true;
+                Position winPos = GetWindowById(winId).GetPosition();
+                EziEnv::GetInstance().SetRememberedWindowPosition(winPos);
             }
         }
     }
 
-    if (isRecordPostion)
-    {
-        Window &win = GetWindowById(winId);
-        Position winPos = win.GetPosition();
-        EziEnv::GetInstance().SetRememberedWindowPosition(winPos);
-    }
-
+    // 删除窗口
     for (auto it = windows.begin(); it != windows.end(); ++it)
     {
         if ((*it)->GetWinId() == winId)
@@ -133,12 +130,15 @@ void Application::DelWindowById(WinId winId)
             break;
         }
     }
+
     if (windows.empty())
     {
+        // 没有窗口要退出应用
         Exit(0);
     }
     else
     {
+        // 没有可以被用户看到的窗口也要退出应用
         ExitIfNoVisibleWindow();
     }
 }
@@ -171,7 +171,6 @@ int Application::Exit(int code)
     {
         win->Close();
     }
-    windows.clear();
     Webview::GetInstance().GetEnv()->Release();
     CoUninitialize();
     PostQuitMessage(code);
