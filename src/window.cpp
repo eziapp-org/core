@@ -247,7 +247,7 @@ Window::Window(const Object &options)
     }
 
     // 设置标题
-    title = options.value("title", "EziWindow");
+    title = options.value("title", "EziApplication");
 
     BackgroundMode bgMode = BackgroundMode::opaque;
     String bgModeStr = options.value("backgroundMode", "opaque");
