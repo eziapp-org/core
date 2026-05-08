@@ -88,6 +88,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
+    case WM_NCCALCSIZE: {
+        if (window != nullptr && window->IsBorderless())
+            return 0;
+        break;
+    }
+
     case WM_SETTINGCHANGE: {
         Private::UpdateWindowTheme(hwnd);
         if (window->GetAccentColor() == "system")
@@ -620,7 +626,7 @@ bool Window::IsFocused()
 
 bool Window::IsBorderless()
 {
-    return (GetWindowLong(this->winId, GWL_STYLE) & WS_POPUP) != 0;
+    return this->isBorderless;
 }
 
 BackgroundMode Window::GetBackgroundMode() const
@@ -708,22 +714,7 @@ void Window::SetFocusable(bool enable)
 
 void Window::SetBorderless(bool enable)
 {
-    LONG style = GetWindowLong(this->winId, GWL_STYLE);
-
-    if (enable)
-    {
-        style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-        style |= WS_POPUP;
-        DWM_WINDOW_CORNER_PREFERENCE preference = DWMWCP_ROUND;
-        DwmSetWindowAttribute(this->winId, DWMWA_WINDOW_CORNER_PREFERENCE, &preference, sizeof(preference));
-    }
-    else
-    {
-        style &= ~WS_POPUP;
-        style |= WS_OVERLAPPEDWINDOW;
-    }
-
-    SetWindowLong(this->winId, GWL_STYLE, style);
+    this->isBorderless = enable;
     SetWindowPos(this->winId, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 }
 

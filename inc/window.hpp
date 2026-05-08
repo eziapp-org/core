@@ -64,6 +64,7 @@ class Window
     Splash splash;
     Size minSize{100, 100};
     bool movable{true};
+    bool isBorderless{false};
 
     std::function<bool()> onCloseCallback;
 
