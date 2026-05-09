@@ -33,5 +33,8 @@ class Webview
   public:
     void CreateEnv();
     void CreateController(Window &window);
+
+  public:
+    void Shutdown();
 };
 } // namespace ezi

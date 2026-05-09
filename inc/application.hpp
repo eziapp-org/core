@@ -29,6 +29,7 @@ class Application
   private:
     WindowList windows;
     Window *masterWindow = nullptr;
+    bool exiting = false;
     ULONG_PTR gdiplusToken;
     String windowClassName;
 

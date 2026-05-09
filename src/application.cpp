@@ -134,7 +134,14 @@ void Application::DelWindowById(WinId winId)
     if (windows.empty())
     {
         // 没有窗口要退出应用
-        Exit(0);
+        if (!exiting)
+        {
+            Exit(0);
+        }
+        else
+        {
+            PostQuitMessage(0);
+        }
     }
     else
     {
@@ -167,11 +174,32 @@ WindowList &Application::GetWindowList()
 
 int Application::Exit(int code)
 {
-    for (auto &win : windows)
+    if (exiting)
     {
-        win->Close();
+        PostQuitMessage(code);
+        return code;
     }
-    Webview::GetInstance().GetEnv()->Release();
+    exiting = true;
+
+    // 同步关闭窗口，确保 Window/controller/view 在 COM 反初始化前释放
+    std::vector<HWND> winIds;
+    winIds.reserve(windows.size());
+    for (auto *win : windows)
+    {
+        if (win)
+        {
+            winIds.push_back(win->GetWinId());
+        }
+    }
+    for (auto hwnd : winIds)
+    {
+        if (hwnd)
+        {
+            SendMessage(hwnd, WM_CLOSE, 0, 0);
+        }
+    }
+
+    Webview::GetInstance().Shutdown();
     CoUninitialize();
     PostQuitMessage(code);
     return code;

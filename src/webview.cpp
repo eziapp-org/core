@@ -453,6 +453,11 @@ Env Webview::GetEnv()
     return this->env;
 }
 
+void Webview::Shutdown()
+{
+    this->env.reset();
+}
+
 Webview &Webview::GetInstance()
 {
     static Webview instance;
