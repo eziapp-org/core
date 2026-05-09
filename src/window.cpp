@@ -227,19 +227,22 @@ Window::Window(const Object &options)
     WNDCLASSEX wcex = {0};
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    auto WClassName = app.GetWindowClassName().c_str();
-    if (!GetClassInfoEx(hInstance, WClassName, &wcex))
+    auto className = app.GetWindowClassName();
+    auto cClassName = className.c_str();
+    if (!GetClassInfoEx(hInstance, cClassName, &wcex))
     {
         wcex.lpfnWndProc = WndProc;
         wcex.hInstance = hInstance;
-        wcex.lpszClassName = WClassName;
+        wcex.lpszClassName = cClassName;
         wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(1));
         wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(1));
 
         if (!RegisterClassEx(&wcex))
         {
-            println("Failed to register window class.\n");
-            return;
+            auto code = GetLastError();
+            MessageBox(nullptr, utf8ToGbk("注册窗口类失败，应用即将关闭。" + std::to_string(code)).c_str(), "Error",
+                       MB_OK);
+            exit(1);
         }
     }
 
@@ -330,12 +333,13 @@ Window::Window(const Object &options)
     splash.aplha = 1.0f;
 
     // 创建窗口
-    this->winId = CreateWindowEx(0, WClassName, utf8ToGbk(title).c_str(), WS_OVERLAPPEDWINDOW, x, y, width, height,
+    this->winId = CreateWindowEx(0, cClassName, utf8ToGbk(title).c_str(), WS_OVERLAPPEDWINDOW, x, y, width, height,
                                  nullptr, nullptr, hInstance, nullptr);
 
     if (this->winId == NULL)
     {
-        MessageBox(nullptr, utf8ToGbk("窗口创建失败，应用即将关闭。").c_str(), "Error", MB_OK);
+        auto code = GetLastError();
+        MessageBox(nullptr, utf8ToGbk("窗口创建失败，应用即将关闭。" + std::to_string(code)).c_str(), "Error", MB_OK);
         exit(1);
     }
 
