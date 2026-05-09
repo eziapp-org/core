@@ -160,6 +160,12 @@ void Webview::CreateController(Window &window)
                 accentColor = Utils::ColorRefToHex(Utils::GetAccentColor());
             }
 
+            // 如果是透明窗口就不使用窗口载入css动画
+            auto isTransparent = window.GetBackgroundMode() == BackgroundMode::transparent;
+
+            // 动画字符串
+            auto animationStr = isTransparent ? "" : "animation: " + startupTransition + " 0.5s cubic-bezier(0.00, 0.87, 0.00, 1.00), fadeIn 0.4s cubic-bezier(0.01, 0.46, 0.00, 0.81);";
+
             String injectScript = 
             "window.Ezi={"
                 "EziVersion:'" + eziVersion + "',"
@@ -178,8 +184,7 @@ void Webview::CreateController(Window &window)
                 "-webkit-user-select: none;"
                 "user-select: none;"
                 "overflow: hidden;"
-                "animation: " + startupTransition + " 0.5s cubic-bezier(0.00, 0.87, 0.00, 1.00),"
-                "fadeIn 0.4s cubic-bezier(0.01, 0.46, 0.00, 0.81);"
+                + animationStr +
             "}"
             "@keyframes fadeIn {from {opacity: 0;} to {opacity: 1;}}"
             "@keyframes ScaleIn {from {transform: scale(0.9);} to {transform: scale(1);}}"
@@ -356,7 +361,9 @@ void Webview::CreateController(Window &window)
             Callback<ICoreWebView2NavigationCompletedEventHandler>(
                 [&window](ICoreWebView2 *sender, ICoreWebView2NavigationCompletedEventArgs *args) -> HRESULT {
                     if (window.GetStatus() == WindowStatus::Loading)
+                    {
                         window.SetStatus(WindowStatus::Switching);
+                    }
                     return S_OK;
                 })
                 .Get(),
@@ -427,10 +434,7 @@ void Webview::CreateController(Window &window)
             return true;
         }();
 
-        // 设置窗口内容
-        RECT bounds;
-        GetClientRect(window.GetWinId(), &bounds);
-        controller->put_Bounds(bounds);
+        controller->put_IsVisible(FALSE);
         window.SetController(controller);
         window.SetView(view);
         auto &bridge = Bridge::GetInstance();

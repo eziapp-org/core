@@ -33,15 +33,6 @@ static void DrawSplashScreen(Graphics &graphics, Window &window)
     auto winWidth = window.GetWidth();
     auto winHeight = window.GetHeight();
 
-    if (window.GetStatus() == WindowStatus::Switching)
-    {
-        if (splash.aplha == 1.0f)
-        {
-            SetTimer(window.GetWinId(), 1, 16, nullptr);
-        }
-        splash.aplha -= 0.1f;
-    }
-
     float x = (winWidth - splash.width) / 2;
     float y = (winHeight - splash.height) / 2;
 
@@ -74,15 +65,31 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_TIMER: {
         if (wParam == 1)
         {
-            if (window->GetStatus() == WindowStatus::Switching)
+            auto status = window->GetStatus();
+            if (status != WindowStatus::Switching)
+            {
+                KillTimer(hwnd, 1);
+                return 0;
+            }
+            if (status == WindowStatus::Switching)
             {
                 auto &splash = window->GetSplash();
+                // 如果是透明背景，立即切换到Ready状态
+                // 因为透明窗口绘制不了slpash
+                if (window->GetBackgroundMode() == BackgroundMode::transparent)
+                {
+                    window->SetStatus(WindowStatus::Ready);
+                    KillTimer(hwnd, 1);
+                    return 0;
+                }
+                splash.aplha -= 0.1f;
                 if (splash.aplha < 0.0f)
                 {
                     window->SetStatus(WindowStatus::Ready);
                     KillTimer(hwnd, 1);
-                    break;
+                    return 0;
                 }
+                // 发起绘制请求
                 InvalidateRect(hwnd, nullptr, FALSE);
             }
         }
@@ -459,6 +466,20 @@ void Window::SetView(View view)
 
 void Window::SetStatus(WindowStatus status)
 {
+    if (status == WindowStatus::Ready)
+    {
+        // 窗口准备好之后设置webview框架
+        RECT bounds;
+        GetClientRect(winId, &bounds);
+        controller->put_Bounds(bounds);
+
+        controller->put_IsVisible(TRUE);
+    }
+    else if (status == WindowStatus::Switching)
+    {
+        SetTimer(winId, 1, 16, nullptr);
+    }
+
     this->status = status;
     InvalidateRect(this->winId, nullptr, TRUE);
 }
